@@ -50,7 +50,6 @@ model Report {
   id String @id @default(uuid())
   user_id String
   report_request_id String @unique
-  status String
   title String
   description String
   result String

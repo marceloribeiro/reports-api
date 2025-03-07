@@ -1,7 +1,8 @@
 import { Request, Response } from 'express';
 import prisma_client from '../config/prisma_client';
 import { AuthRequest } from '../types/express';
-import { ReportRequestStatus } from '@prisma/client'
+import { ReportRequestStatus } from '../types/ReportRequest';
+import worker_client from '../config/worker_client';
 
 class ReportRequestsController {
 
@@ -17,13 +18,24 @@ class ReportRequestsController {
   }
 
   async create(req: AuthRequest, res: Response): Promise<void> {
+    const scheduled_at = req.body.scheduled_at && new Date(req.body.scheduled_at) > new Date() ?
+      new Date(req.body.scheduled_at) :
+      new Date();
+
+    console.log(`Creating report request with scheduled_at: ${scheduled_at}`);
+
     const reportRequest = await prisma_client.reportRequest.create({
       data: {
         user_id: req.user.id,
-        scheduled_at: req.body.scheduled_at ? new Date(req.body.scheduled_at) : new Date(),
+        scheduled_at: scheduled_at,
         status: ReportRequestStatus.PENDING
       }
     });
+
+    if (reportRequest.scheduled_at <= new Date()) {
+      worker_client.add('GenerateReportWorker#process', { report_request_id: reportRequest.id });
+    }
+
     res.json({ report_request: reportRequest });
     return;
   }
@@ -60,6 +72,10 @@ class ReportRequestsController {
         scheduled_at: scheduled_at
       }
     });
+
+    if (scheduled_at <= new Date() && reportRequest.status === ReportRequestStatus.PENDING) {
+      worker_client.add('GenerateReportWorker#process', { report_request_id: reportRequest.id });
+    }
 
     res.json({ report_request: updatedReportRequest });
     return
@@ -111,6 +127,10 @@ class ReportRequestsController {
       where: { id, user_id: req.user.id },
       data: { status: ReportRequestStatus.PENDING }
     });
+
+    if (reportRequest.scheduled_at <= new Date()) {
+      worker_client.add('GenerateReportWorker#process', { report_request_id: reportRequest.id });
+    }
 
     res.json({ report_request: updatedReportRequest });
     return
