@@ -72,3 +72,4 @@ When I have more time I plan to add the following:
 - Might consider nesting elements (i.e. report requests coming back with their reports)
 - Actual emails going out instead of a mocked worker to send notifications to users
 - Admin users concept so admin users can manage other user accounts
+- Linters
