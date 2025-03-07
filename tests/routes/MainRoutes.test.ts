@@ -7,7 +7,7 @@ describe('MainRoutes', () => {
       const response = await request(server).get('/');
 
       expect(response.status).toBe(200);
-      expect(response.body).toEqual({ api: 'Emobi Reports 0.0.1' });
+      expect(response.body).toEqual({ api: 'Emobi Reports', version: process.env.CURRENT_VERSION });
     });
   });
 
