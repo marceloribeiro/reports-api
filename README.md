@@ -1,10 +1,14 @@
-### Reports API
+# Reports API
 
-This project is intended for managing report requests and receiving reports, which are generated in the background.
+Current Version: 0.0.1
+
+## Summary
+
+This project is intended for managing report requests and receiving reports, which are generated in the background. It is also intended to demonstrate my abilities with node, express, typescript APIs.
 
 It is user protected, so each user will have access to their own requests and generated reports. Once a report is generated, an email should go out notifying the user their report is ready.
 
-### Setup
+## Setup
 
 Start by cloning the repo and installing package dependencies:
 
@@ -14,7 +18,7 @@ cd reports-api
 npm install
 ```
 
-## Starting the Web Server
+### Starting the Web Server
 
 You can start the web server by running:
 
@@ -26,7 +30,7 @@ And you should be able to get to the app running here:
 
 [http://localhost:3001](http://localhost:3001)
 
-## Starting the Background Jobs Server
+### Starting the Background Jobs Server
 
 You can start the background jobs server by running:
 
@@ -35,7 +39,7 @@ npm run workers # starts the queue for processing workers
 npm run cron    # starts the cron for scheduled workers
 ```
 
-## Running tests
+### Running tests
 
 You can run tests for the existing routes by:
 
