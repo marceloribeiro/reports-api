@@ -41,7 +41,10 @@ class AuthController {
   async logout(req: AuthRequest, res: Response): Promise<void> {
     const user = req.user;
     user.jti = null;
-    await user.save();
+    await prisma_client.user.update({
+      where: { id: user.id },
+      data: { jti: undefined }
+    });
     res.json({ message: 'Logged out' });
     return
   }

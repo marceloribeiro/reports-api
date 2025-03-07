@@ -46,7 +46,6 @@ class AuthService {
     });
 
     const payload = { user_id: user.id, jti: new_jti };
-    console.log('payload', payload);
 
     return Jwt.sign(payload, process.env.JWT_SECRET as string, { expiresIn: '1h' });
   }
